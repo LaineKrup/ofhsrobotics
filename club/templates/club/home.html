@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Osceola Robotics Club</title>
+    <link rel="stylesheet" href="{% static 'club/css/styles.css' %}" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-heading">
+            <h1>OFHS ROBOTICS</h1>
+            <p>TerraBytes #15858</p>
+        </div>
+        <div class="header-tools">
+            <div class="club-logo">
+                <img
+                    src="{% static 'club/club/images/club-logo.jpg' %}"
+                    alt="TerraBytes team logo"
+                    class="club-logo-image"
+                />
+            </div>
+            <form method="get" class="search-form header-search" role="search">
+                <label class="visually-hidden" for="site-search">Search projects and resources</label>
+                <input
+                    type="search"
+                    id="site-search"
+                    name="q"
+                    class="input-field"
+                    placeholder="Search projects and resources..."
+                    value="{{ query }}"
+                />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </header>
+    <main class="grid-layout">
+        <section class="block block-projects">
+            <h2>PROJECTS</h2>
+            <div class="project-slider slider">
+                <div class="slider-window">
+                    <div class="slider-item active">
+                        <img src="{% static 'club/club/images/projects/bestproject.jpg' %}" alt="2026/26 Project" />
+                    </div>
+                    <div class="slider-item">
+                        <img src="{% static 'club/club/images/projects/dt.jpg' %}" alt="2025/26 Robot" />
+                    </div>
+                    <div class="slider-item">
+                        <img src="{% static 'club/club/images/projects/idkproject.jpg' %}" alt="2025/26 Robotics project" />
+                    </div>
+                    <div class="slider-item">
+                        <img src="{% static 'club/club/images/projects/box.jpg' %}" alt="Lollipop code box challenge" />
+                    </div>
+                    <div class="slider-item">
+                        <img src="{% static 'club/club/images/projects/backofboxforreal.jpg' %}" alt="Back of code box challenge" />
+                    </div>
+                </div>
+                <button class="slider-nav prev">‹</button>
+                <button class="slider-nav next">›</button>
+            </div>
+        </section>
+
+        <section class="block block-welcome">
+            <h2>WELCOME</h2>
+            {% if query %}
+                <div class="search-results" aria-live="polite">
+                    <h3>Search results for &quot;{{ query }}&quot;</h3>
+                    {% if projects or resources %}
+                        {% if projects %}
+                            <h4>Projects</h4>
+                            {% for project in projects %}
+                                <article class="search-result">
+                                    <h5>{{ project.title }}</h5>
+                                    {% if project.description %}<p>{{ project.description }}</p>{% endif %}
+                                </article>
+                            {% endfor %}
+                        {% endif %}
+                        {% if resources %}
+                            <h4>Resources</h4>
+                            {% for resource in resources %}
+                                <a class="search-result" href="{{ resource.url }}" target="_blank" rel="noopener">
+                                    {{ resource.title }}
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        <p>No projects or resources matched your search.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+            <p>The Osceola Robotics Club is a student-led team focused on learning engineering, programming, and teamwork through competitive robotics and community outreach.</p>
+            <p>This club is open to all students, especially beginners interested in engineering. We meet regularly to design, build, and program functional robots primarily for the regional FIRST Tech Challenge. Beyond competition, members can explore hands-on engineering and fabrication using our lab’s 3D printer, laser cutter, and other tools to bring their own ideas to life.</p>
+            <p>More information about this year's challenge <a href="https://www.firstinspires.org/programs/ftc/" target="_blank">here</a>.</p>
+        </section>
+
+        <section class="block block-photos">
+            <h2>PHOTOS</h2>
+            <div class="photo-slider slider">
+                <div class="slider-window">
+                    <div class="slider-item active">
+                        <img src="{% static 'club/club/images/photos/team.jpg' %}" alt="Robotics team" />
+                    </div>
+                    <div class="slider-item">
+                        <img src="{% static 'club/club/images/photos/photosmichael.jpg' %}" alt="Michael working on robotics" />
+                    </div>
+                    <div class="slider-item">
+                        <img src="{% static 'club/club/images/photos/poster.jpg' %}" alt="Robotics poster" />
+                    </div>
+                </div>
+                <button class="slider-nav prev">‹</button>
+                <button class="slider-nav next">›</button>
+            </div>
+        </section>
+
+        <section class="block block-resources">
+            <h2>RESOURCES</h2>
+            <div class="resource-group">
+                <h3>For Students:</h3>
+                {% for item in resources %}
+                    {% if item.category == 'students' %}
+                        <a href="{{ item.url }}" target="_blank">{{ item.title }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="resource-group">
+                <h3>Project Ideas:</h3>
+                {% for item in resources %}
+                    {% if item.category == 'ideas' %}
+                        <a href="{{ item.url }}" target="_blank">{{ item.title }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="resource-group">
+                <h3>Engineering Tools:</h3>
+                {% for item in resources %}
+                    {% if item.category == 'tools' %}
+                        <a href="{{ item.url }}" target="_blank">{{ item.title }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="resource-group">
+                <h3>CS:</h3>
+                {% for item in resources %}
+                    {% if item.category == 'cs' %}
+                        <a href="{{ item.url }}" target="_blank">{{ item.title }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="block block-contact">
+            <h2>CONTACT US</h2>
+            <form method="post" class="contact-form">
+                {% csrf_token %}
+                {{ form.name.label_tag }}
+                {{ form.name }}
+                {{ form.message.label_tag }}
+                {{ form.message }}
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+
+        <section class="block block-about">
+            <h2>ABOUT US</h2>
+            <p>We are a team of motivated students with a passion for engineering, STEM, and computer science!</p>
+            <p><b>Co-Captain:</b> Hannah Chung<br><b>Co-Captain:</b> Sylas Futchko</p>
+            <p><b>Mechanical Lead:</b> Michael Wadsworth<br><b>Programming Lead:</b> Skyler Jordan Winfield<br><b>Business Lead:</b> Hannah Chung</p>
+            <p class="footer-credit"><b>Designed by Laine Krupka</b> (2026)</p>
+        </section>
+    </main>
+    <script src="{% static 'club/js/scripts.js' %}"></script>
+</body>
+</html>
